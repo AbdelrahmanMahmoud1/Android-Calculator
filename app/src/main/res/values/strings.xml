@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">Calculator</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="m">M+</string>
+    <string name="n1">1</string>
+    <string name="n2">2</string>
+    <string name="n3">3</string>
+    <string name="n4">4</string>
+    <string name="n5">5</string>
+    <string name="n6">6</string>
+    <string name="n7">7</string>
+    <string name="n8">8</string>
+    <string name="n9">9</string>
+    <string name="n0">0</string>
+    <string name="plus">+</string>
+    <string name="minus">-</string>
+    <string name="divide">/</string>
+    <string name="times">*</string>
+    <string name="percent">%</string>
+    <string name="dot">.</string>
+    <string name="equal">=</string>
+    <string name="Mminus">M-</string>
+    <string name="MR">MR</string>
+    <string name="MC">MC</string>
+    <string name="ce">CE</string>
+    <string name="bracket">( )</string>
+    <string name="hint">0</string>
+    <string name="converter">Converter</string>
+    <string name="enter_the_numner_to_convert">Enter the numner to convert</string>
+    <string name="sign">+/-</string>
+    <string name="deleteicon">Deleteicon</string>
+
+
+</resources>
