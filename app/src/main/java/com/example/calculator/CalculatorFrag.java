@@ -28,6 +28,9 @@ public class CalculatorFrag extends Fragment  {
         return view;
     }
 
+public void ab (View v){
+
+}
 
 
 
