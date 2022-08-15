@@ -11,27 +11,20 @@
 
     >
 
-
-
+<!--    android:name="com.example.calculator.CalculatorFrag"-->
+<!--    tools:layout="@layout/fragment_calculator"-->
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"
-        android:name="com.example.calculator.CalculatorFrag"
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0"
-        tools:layout="@layout/fragment_calculator" />
-
-    <Button
-        android:id="@+id/button5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button" />
+         />
 
 </androidx.appcompat.widget.LinearLayoutCompat>
