@@ -11,8 +11,7 @@
 
     >
 
-<!--    android:name="com.example.calculator.CalculatorFrag"-->
-<!--    tools:layout="@layout/fragment_calculator"-->
+
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"
@@ -25,6 +24,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0"
+        android:name="com.example.calculator.CalculatorFrag"
+        tools:layout="@layout/fragment_calculator"
          />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

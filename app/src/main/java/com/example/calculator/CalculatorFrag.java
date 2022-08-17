@@ -24,7 +24,6 @@ public class CalculatorFrag extends Fragment  {
         View view = binding.getRoot();
 
 
-
         return view;
     }
 
