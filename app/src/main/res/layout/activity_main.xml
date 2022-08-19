@@ -429,9 +429,10 @@
 
                 <Button
                     android:id="@+id/btn_dot"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="7dp"
+                    android:layout_weight="1"
                     android:background="@drawable/round_btn"
                     android:backgroundTint="#FAF3E3"
                     android:elevation="5dp"
@@ -443,12 +444,13 @@
 
                 <Button
                     android:id="@+id/btn0"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="7dp"
+                    android:layout_weight="1"
                     android:background="@drawable/round_button_darkblue"
-                    android:backgroundTint="#003865"
 
+                    android:backgroundTint="#003865"
                     android:elevation="5dp"
                     android:onClick="clickedNum"
                     android:text="@string/n0"
@@ -459,9 +461,10 @@
 
                 <Button
                     android:id="@+id/sign"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="7dp"
+                    android:layout_weight="1"
                     android:background="@drawable/round_btn"
                     android:backgroundTint="#FAF3E3"
                     android:elevation="5dp"
@@ -472,9 +475,10 @@
 
                 <Button
                     android:id="@+id/btn_equal"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="7dp"
+                    android:layout_weight="1"
                     android:background="@drawable/orange_btn"
                     android:backgroundTint="#FF9800"
                     android:elevation="5dp"
