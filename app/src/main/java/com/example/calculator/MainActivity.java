@@ -1,17 +1,14 @@
 package com.example.calculator;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.viewbinding.ViewBinding;
+
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,30 +20,28 @@ import javax.script.ScriptException;
 
 
 public class MainActivity extends AppCompatActivity {
-    CalculatorFrag Fragment;
-    ConverterFrag  Fragment2;
+
     ActivityMainBinding binding;
     TextView textview;
-    int flag;
+
 
     ScriptEngine engine;
 
-    boolean dotAfterEval = false;
-    boolean zeroFlag = true;
-    boolean operationTrigger = false;
-    boolean sign = true;
-    boolean isDot = false;
-    boolean prevNum = false;
-    boolean isOp = true;
-    boolean isZeroDot = false;
-    boolean firstNumberZero = false;
-    boolean numberAfDot = true;
-    int numbersCount = 0;
+    boolean dotAfterEval = false; // condition to prevent setting dot to decimal number after evaluation
+    boolean zeroFlag = true; // condition that give permession to add zeros
+    boolean operationTrigger = false; // condition to check if there is operation or not
+    boolean sign = true; // condtion to prevent adding two signs after each other
+    boolean isDot = false; // condition to check if there is dot or not
+    boolean prevNum = false; // condition to check if there is previous number entered or not
+    boolean isOp = true; // condition to check if opertaion entered to make the app enter new dot
+    boolean isZeroDot = false; // condition to check if there is dot to add zeros as the user want bc there is no leading zero
+    boolean firstNumberZero = false; // condition to check if the first number is zero to replace it if user entered number
+    boolean numberAfDot = true; // condition to check if there is number after dot to prevent two dots error
+    int numbersCount = 0;// count of characters in number
 
-    String ms = "";
-    boolean isMs =true;
-    String mr;
-    boolean isMr =false;
+    String ms = ""; // memory variable
+    boolean isMs =true; // check if can save item in the memroy or not to prevent errors
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, ConverterActivity.class);
 
+        // function to change the activity
         binding.btnConverter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // MS memory function that save  item in the memory
 
         binding.MS.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("TAG", "onClick: "+ms);
             }
         });
+        // MR memory function that recall item from the memory
 
         binding.MR.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Memory Cleared", Toast.LENGTH_SHORT).show();
             }
         });
+        // M+ memory function that add to item in the memory
 
         binding.M1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // M- memory function that subtract from item in the memory
         binding.M2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -198,6 +198,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         textview = (TextView) binding.textView2;
+        //this function set the sign on the screen to make number negative or positive
         binding.sign.setOnClickListener(v -> {
             if (!textview.getText().toString().isEmpty()){
 
@@ -221,26 +222,6 @@ public class MainActivity extends AppCompatActivity {
                 isMs =false;
             }
         });
-//        Button btn_Converter = binding.fragmentContainerView.findViewById(R.id.btn_Converter);
-//
-//
-//            btn_Converter.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//
-//
-//                    btn_Converter.setText("Calculator");
-//                    Fragment2 = new ConverterFrag();
-//                    FragmentManager fm = getSupportFragmentManager();
-//                    FragmentTransaction transaction = fm.beginTransaction();
-//                    transaction.replace(R.id.fragmentContainerView, Fragment2);
-//                    transaction.addToBackStack("name");
-//                    transaction.commit();
-//
-//
-//
-//                }
-//            });
 
 
         }
@@ -249,6 +230,12 @@ public class MainActivity extends AppCompatActivity {
 
 
     //number clicked
+    //this function used to  type on the screen for user
+    // it handle most of the corner cases to prevent it
+    //like adding two operation after each other
+    //leading zero error
+    //override the zero if it leads a number
+    //etc..
     public void clickedNum(View view){
         Button num = (Button) view;
         String text = num.getText().toString();
@@ -327,6 +314,9 @@ public class MainActivity extends AppCompatActivity {
 
     }else{return;}}
 
+
+    // this function used to set dot on the screen after checking on different condition
+    // to prevent various errors and corner cases that could exist
     public void dotFunction (View view){
 
 
@@ -364,15 +354,18 @@ public class MainActivity extends AppCompatActivity {
 
 
 // evaluation function
+
     public void evaluateFunction(View view) throws ScriptException {
         String result = textview.getText().toString();
-
+//first we check that the characters entered are valid and not empty
         if (result.isEmpty()) {return;} else {
            char x = result.charAt(result.length()-1);
             if (x == '+' || x == '*' || x == '-' || x == '%' || x == '/' ){
                 Toast.makeText(this, "Invalid Format", Toast.LENGTH_SHORT).show();
                 return;
             }
+            // if the entered number is valid then we evaluate the number by the script engine which
+            //provide us with eval funtion
             String value = engine.eval(result).toString();
             Log.d("TAG", "evaluateFunction: "+ value);
             if (value.equals("Infinity") || value.equals("NaN") || value.equals(".")){
@@ -395,7 +388,7 @@ public class MainActivity extends AppCompatActivity {
                 isMs = true;
 
             } else {
-                double scale = Math.pow(10, 3);
+                double scale = Math.pow(10, 4);
                 Double f = Math.round(fResult * scale) / scale;
                 textview.setText(f.toString());
                 isOp = false;
@@ -410,13 +403,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-    //set the hint text
+    //set the hint text to see the previous value
     public void setHintText(String t){
        TextView text = binding.textView3;
        text.setText(t);
     }
 
-    //clear function
+    //clear function and reset all condition to the default value
     public void clear(View view){
         textview.setText("");
         setHintText("");
@@ -435,6 +428,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    // this function delete the last character in the textview and change the program state
     public void delete (View view){
         String dispText = textview.getText().toString();
         if(!textview.getText().toString().isEmpty()){
@@ -456,19 +450,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-//    public void ss(View v) {
-//
-//
-//
-//        Fragment Fragment2 = new ConverterFrag();
-//        FragmentManager fm = getSupportFragmentManager();
-//        FragmentTransaction transaction = fm.beginTransaction();
-//        transaction.replace(R.id.fragmentContainerView, Fragment2);
-//        transaction.commit();
-//
-//
-//
-//    }
+
 
 
 }

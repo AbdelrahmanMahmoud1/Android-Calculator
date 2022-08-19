@@ -54,6 +54,9 @@ public class ConverterActivity extends AppCompatActivity implements AdapterView.
         spinner.setOnItemSelectedListener(this);
         spinner2.setOnItemSelectedListener(this);
 
+
+        // this function check for the entered values in the spinner then convert to the another unit
+        // only if the two units are compatable for convertion
         binding.Convert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,8 +92,13 @@ public class ConverterActivity extends AppCompatActivity implements AdapterView.
                     else if (value1.equals("C") || value1.equals("F")){
                             if (value2.equals("C") || value2.equals("F")){
                                 switch (value1){
-                                    case "C":  if(value2.equals("F")){result = (result * 9/5) + 32;binding.textView4.setText(result.intValue()+"F");}
-                                    case "F":  if(value2.equals("C")){result = (result-32)*(5/9);binding.textView4.setText(result.intValue()+"C");}
+                                    case "C":  if(value2.equals("F")){result = (result * 9/5) + 32;binding.textView4.setText(result+"F");}
+                                    case "F":  if(value2.equals("C")){
+
+                                        result = (result-32.0);
+                                        result = result * 5/9;
+                                        Log.d("TAG", "onClick: "+result);
+                                        binding.textView4.setText(result+"C");}
 
                                 }
                             }
@@ -112,9 +120,6 @@ public class ConverterActivity extends AppCompatActivity implements AdapterView.
                             }
                         }
                     }
-
-
-
             }
         }});}
 
