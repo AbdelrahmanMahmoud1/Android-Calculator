@@ -18,6 +18,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+//calculator App Abdelrahman Mahmoud 18P6605
 
 public class MainActivity extends AppCompatActivity {
 
@@ -196,6 +197,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
+
         super.onStart();
         textview = (TextView) binding.textView2;
         //this function set the sign on the screen to make number negative or positive
