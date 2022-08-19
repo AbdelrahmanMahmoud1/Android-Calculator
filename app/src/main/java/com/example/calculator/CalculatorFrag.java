@@ -25,6 +25,14 @@ public class CalculatorFrag extends Fragment  {
         binding = FragmentCalculatorBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
+        binding.MS.setOnClickListener(v -> {
+           String s = binding.textView2.getText().toString();
+            Log.d("TAG", "onCreateView: "+s);
+        });
+
+        binding.btn1.setOnClickListener(v -> {
+            ((MainActivity)getActivity()).clickedNum(binding.btn1);
+        });
 
         return view;
     }

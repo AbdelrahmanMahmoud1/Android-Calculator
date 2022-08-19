@@ -30,6 +30,7 @@
     <string name="enter_the_numner_to_convert">Enter the numner to convert</string>
     <string name="sign">+/-</string>
     <string name="deleteicon">Deleteicon</string>
+    <string name="ms">MS</string>
 
 
 </resources>

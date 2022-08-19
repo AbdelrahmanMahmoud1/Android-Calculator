@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     ScriptEngine engine;
 
+    boolean dotAfterEval = false;
     boolean zeroFlag = true;
     boolean operationTrigger = false;
     boolean sign = true;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     boolean firstNumberZero = false;
     boolean numberAfDot = true;
     boolean states [];
+
     int numbersCount = 0;
 
 
@@ -72,18 +74,24 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         textview = (TextView) binding.fragmentContainerView.findViewById(R.id.textView2);
         binding.fragmentContainerView.findViewById(R.id.sign).setOnClickListener(v -> {
-            Log.d("TAG", "onStart: "+isZeroDot+operationTrigger+zeroFlag);
-            if(textview.getText().toString().charAt(textview.getText().length() - 1) == '.'){return;}
+            if (!textview.getText().toString().isEmpty()){
+
+                if(textview.getText().toString().charAt(textview.getText().length() - 1) == '.' ){return;}
+                else if (textview.getText().toString().charAt(textview.getText().length() - 1) == '-' &&
+                operationTrigger){return;}
+            }
             if (sign){
                 textview.append("-");
                 sign = false;
                 zeroFlag = true;
+                isOp= true;
             }else{
                 String dispText = textview.getText().toString();
 
                 String text = dispText.substring(0,dispText.length() - 1);
                 textview.setText(text);
                 sign = true;
+                isOp= false;
             }
         });
         Button btn_Converter = binding.fragmentContainerView.findViewById(R.id.btn_Converter);
@@ -99,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
                     FragmentManager fm = getSupportFragmentManager();
                     FragmentTransaction transaction = fm.beginTransaction();
                     transaction.replace(R.id.fragmentContainerView, Fragment2);
+                    transaction.addToBackStack("name");
                     transaction.commit();
 
 
@@ -139,6 +148,8 @@ public class MainActivity extends AppCompatActivity {
                 zeroFlag = false;
                 isZeroDot = false;
                 firstNumberZero = false;
+                isDot = false;
+                dotAfterEval = false;
             }else {
                 Log.d("TAG", "clickedNum: ");
                 return;
@@ -156,12 +167,19 @@ public class MainActivity extends AppCompatActivity {
                  if(!text.equals("0"))
                  {
                      if (dispText.equals("0") && firstNumberZero){
-                         textview.setText(text);operationTrigger = false;prevNum = true;isDot=false;numbersCount++;zeroFlag=true;firstNumberZero=false;sign = true;numberAfDot=true;}
+                         textview.setText(text);operationTrigger = false;prevNum = true;numbersCount++;zeroFlag=true;firstNumberZero=false;sign = true;numberAfDot=true;}
                      else if (firstNumberZero && !isZeroDot){
                          text = dispText.substring(0,dispText.length() - 1) + text;
-                         textview.setText(text);operationTrigger = false;prevNum = true;isDot=false;numbersCount++;zeroFlag=true;firstNumberZero=false;sign = true;numberAfDot=true;
+                         textview.setText(text);
+                         operationTrigger = false;
+                         prevNum = true;
+                         numbersCount++;
+                         zeroFlag=true;
+                         firstNumberZero=false;
+                         sign = true;numberAfDot=true;
+                         dotAfterEval = false;
                      }
-                     else{textview.append(text);operationTrigger = false;prevNum = true;isDot=false;numbersCount++;zeroFlag=true;firstNumberZero=false;sign = true;numberAfDot=true;}
+                     else{textview.append(text); operationTrigger = false;prevNum = true;numbersCount++;zeroFlag=true;firstNumberZero=false;sign = true;numberAfDot=true;}
                  }
                  else {
                      if(operationTrigger){textview.append(text);prevNum = true;firstNumberZero=true;operationTrigger=false;numbersCount++;sign = true;numberAfDot=true;}
@@ -170,11 +188,13 @@ public class MainActivity extends AppCompatActivity {
                          if (!sign){textview.append(text);prevNum = true;zeroFlag=false;firstNumberZero=false;operationTrigger=false;numbersCount++;sign = true;numberAfDot=true;
                          }
                          else{
-                         textview.append(text);prevNum = true;firstNumberZero=false;operationTrigger=false;numbersCount++;sign = true;numberAfDot=true;
+                         textview.append(text)
+                         ;prevNum = true;firstNumberZero=false;operationTrigger=false;numbersCount++;sign = true;numberAfDot=true;
                      }}
 
 
                  }
+
             }
             }
 
@@ -187,13 +207,24 @@ public class MainActivity extends AppCompatActivity {
         String dispText = textview.getText().toString();
 
         if(dispText.isEmpty()){return;}
-
-        else if (prevNum && isOp){textview.append(".");prevNum=false;isOp = false;isDot=true;isZeroDot=true;numberAfDot=false;}
+        if (dotAfterEval){Log.d("TAG", "dotFunction: "+"0");
+            return;
+        }
+        else if (prevNum && isOp){
+            textview.append(".");prevNum=false;isOp = false;isDot=true;isZeroDot=true;numberAfDot=false;dotAfterEval=false;
+            Log.d("TAG", "dotFunction: "+"1");
+            return;
+        }
         else if (sign){
+            if(isDot || operationTrigger){
+                Log.d("TAG", "dotFunction: ");
+                return;
+            }
            String text = textview.getText().toString();
            if(text.charAt(text.length() - 1) != '-'){
-               textview.append(".");prevNum=false;isOp = false;isDot=true;isZeroDot=true;numberAfDot=false;
+               textview.append(".");prevNum=false;isOp = false;isDot=true;isZeroDot=true;numberAfDot=false;dotAfterEval=false;
                sign = false;
+               Log.d("TAG", "dotFunction: "+"2");
            }
 
         }
@@ -237,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
             }
             String value = engine.eval(result).toString();
             Log.d("TAG", "evaluateFunction: "+ value);
-            if (value.equals("Infinity") || value.equals("NaN")){
+            if (value.equals("Infinity") || value.equals("NaN") || value.equals(".")){
                 Log.d("TAG", "evaluateFunction: "+engine.eval(result) + engine.eval(result));
                 Toast.makeText(this, "Invalid Format", Toast.LENGTH_SHORT).show();
                 textview.setText("");
@@ -254,14 +285,16 @@ public class MainActivity extends AppCompatActivity {
                 prevNum = true;
                 numbersCount = R.toString().length();
                 sign = true;
+
             } else {
                 double scale = Math.pow(10, 3);
                 Double f = Math.round(fResult * scale) / scale;
                 textview.setText(f.toString());
                 isOp = false;
-                numbersCount = fResult.toString().length();
+                numbersCount = f.toString().length();
                 setHintText(f.toString());
                 sign = true;
+                dotAfterEval = true;
 
             }
             if (fResult == 0){firstNumberZero = true;}
@@ -288,6 +321,7 @@ public class MainActivity extends AppCompatActivity {
         numbersCount = 0;
         operationTrigger=false;
         zeroFlag = true;
+        dotAfterEval = false;
     }
 
     public void delete (View view){
