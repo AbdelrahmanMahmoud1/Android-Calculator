@@ -31,6 +31,15 @@
     <string name="sign">+/-</string>
     <string name="deleteicon">Deleteicon</string>
     <string name="ms">MS</string>
-
+    <string name="abdelrahman_mahmoud">Abdelrahman Mahmoud \n Welcome to calculator Application</string>
+    <string-array name="units">
+        <item>Km</item>
+        <item>M</item>
+        <item>Cm</item>
+        <item>C</item>
+        <item>F</item>
+        <item>Kmh</item>
+        <item>Ms</item>
+    </string-array>
 
 </resources>

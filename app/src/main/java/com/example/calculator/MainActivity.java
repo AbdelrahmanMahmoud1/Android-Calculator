@@ -4,11 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.viewbinding.ViewBinding;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,10 +41,12 @@ public class MainActivity extends AppCompatActivity {
     boolean isZeroDot = false;
     boolean firstNumberZero = false;
     boolean numberAfDot = true;
-    boolean states [];
-
     int numbersCount = 0;
 
+    String ms = "";
+    boolean isMs =true;
+    String mr;
+    boolean isMr =false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,26 +59,146 @@ public class MainActivity extends AppCompatActivity {
 
         engine = new ScriptEngineManager().getEngineByName("rhino");
 
-        Fragment = new CalculatorFrag();
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(R.id.fragmentContainerView, Fragment);
-        transaction.commit();
 
-        states= new boolean[15];
+        Intent intent = new Intent(this, ConverterActivity.class);
+
+        binding.btnConverter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(intent);
+            }
+        });
 
 
-        flag = 0;
+        binding.MS.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if ( binding.textView2.getText().toString().isEmpty()){
+                    Toast.makeText(MainActivity.this, "Please enter number", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (isMs && binding.textView2.getText().toString().charAt(
+                        binding.textView2.getText().toString().length() -1 )!= '.')
+
+                {ms = binding.textView2.getText().toString();clear(new View (getApplication()  ));
+                    Toast.makeText(MainActivity.this, "Number saved= "+ ms, Toast.LENGTH_SHORT).show();
+
+                }else{Toast.makeText(MainActivity.this, "Invalid formate save only numbers", Toast.LENGTH_SHORT).show();
+                }
+                Log.d("TAG", "onClick: "+ms);
+            }
+        });
+
+        binding.MR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (binding.textView2.getText().toString().isEmpty()){
+                    if (ms.isEmpty()){
+                        Toast.makeText(MainActivity.this, "Nothing saved", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    binding.textView2.setText(ms);
+                }else{
+                    Toast.makeText(MainActivity.this, "Please clear the screen first", Toast.LENGTH_SHORT).show();
+                }
+                Log.d("TAG", "onClick: "+ms);
+            }
+        });
+        binding.MC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ms = "";
+                clear(new View (getApplication()  ));
+                Toast.makeText(MainActivity.this, "Memory Cleared", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        binding.M1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (!binding.textView2.getText().toString().isEmpty() && isMs){
+                    if (ms.isEmpty()){
+                        Toast.makeText(MainActivity.this, "Nothing saved to add on it", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    Double M1 = new Double(binding.textView2.getText().toString());
+                    Double savedValue = new Double(ms);
+                    savedValue = savedValue + M1;
+                    ms = savedValue.toString();
+
+                    if (M1 % 1 == 0) {
+                        Integer R = savedValue.intValue();
+                        ms = R.toString();
+                        clear(new View (getApplication()  ));
+
+                        Toast.makeText(MainActivity.this, "Value saved = "+ms, Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        double scale = Math.pow(10, 3);
+                        Double f = Math.round(savedValue * scale) / scale;
+                        ms = f.toString();
+                        clear(new View (getApplication()  ));
+
+                        Toast.makeText(MainActivity.this, "Value saved = "+ms, Toast.LENGTH_SHORT).show();
 
 
+                    }}else{
+                    Toast.makeText(MainActivity.this, "Please Enter number first", Toast.LENGTH_SHORT).show();
+                }
+                Log.d("TAG", "onClick: "+ms);
+            }
+        });
+
+        binding.M2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (!binding.textView2.getText().toString().isEmpty() && isMs){
+                    if (ms.isEmpty()){
+                        Toast.makeText(MainActivity.this, "Nothing saved to add on it", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    Double M1 = new Double(binding.textView2.getText().toString());
+                    Double savedValue = new Double(ms);
+                    savedValue = savedValue - M1;
+                    ms = savedValue.toString();
+
+                    if (M1 % 1 == 0) {
+                        Integer R = savedValue.intValue();
+                        ms = R.toString();
+                        clear(new View (getApplication()  ));
+
+                        Toast.makeText(MainActivity.this, "Value saved = "+ms, Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        double scale = Math.pow(10, 3);
+                        Double f = Math.round(savedValue * scale) / scale;
+                        ms = f.toString();
+                        clear(new View (getApplication()  ));
+
+                        Toast.makeText(MainActivity.this, "Value saved = "+ms, Toast.LENGTH_SHORT).show();
+
+
+                    }}else{
+                    Toast.makeText(MainActivity.this, "Please Enter number first", Toast.LENGTH_SHORT).show();
+                }
+                Log.d("TAG", "onClick: "+ms);
+            }
+        });
 
     }
+
+
+
 
     @Override
     protected void onStart() {
         super.onStart();
-        textview = (TextView) binding.fragmentContainerView.findViewById(R.id.textView2);
-        binding.fragmentContainerView.findViewById(R.id.sign).setOnClickListener(v -> {
+        textview = (TextView) binding.textView2;
+        binding.sign.setOnClickListener(v -> {
             if (!textview.getText().toString().isEmpty()){
 
                 if(textview.getText().toString().charAt(textview.getText().length() - 1) == '.' ){return;}
@@ -82,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
             }
             if (sign){
                 textview.append("-");
+                isMs =false;
                 sign = false;
                 zeroFlag = true;
                 isOp= true;
@@ -92,28 +218,31 @@ public class MainActivity extends AppCompatActivity {
                 textview.setText(text);
                 sign = true;
                 isOp= false;
+                isMs =false;
             }
         });
-        Button btn_Converter = binding.fragmentContainerView.findViewById(R.id.btn_Converter);
+//        Button btn_Converter = binding.fragmentContainerView.findViewById(R.id.btn_Converter);
+//
+//
+//            btn_Converter.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//
+//
+//                    btn_Converter.setText("Calculator");
+//                    Fragment2 = new ConverterFrag();
+//                    FragmentManager fm = getSupportFragmentManager();
+//                    FragmentTransaction transaction = fm.beginTransaction();
+//                    transaction.replace(R.id.fragmentContainerView, Fragment2);
+//                    transaction.addToBackStack("name");
+//                    transaction.commit();
+//
+//
+//
+//                }
+//            });
 
 
-            btn_Converter.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-
-                    btn_Converter.setText("Calculator");
-                    Fragment2 = new ConverterFrag();
-                    FragmentManager fm = getSupportFragmentManager();
-                    FragmentTransaction transaction = fm.beginTransaction();
-                    transaction.replace(R.id.fragmentContainerView, Fragment2);
-                    transaction.addToBackStack("name");
-                    transaction.commit();
-
-
-
-                }
-            });
         }
 
 
@@ -124,6 +253,7 @@ public class MainActivity extends AppCompatActivity {
         Button num = (Button) view;
         String text = num.getText().toString();
         String dispText = textview.getText().toString();
+
         if (  textview.length() < 32){
         if (dispText.isEmpty())
         {
@@ -134,7 +264,9 @@ public class MainActivity extends AppCompatActivity {
             else if(text.equals("+")){return;}
             else if(text.equals("%")){return;}
             else{
-                if(text.equals("0")){textview.append(text);prevNum = true;isDot=false;numbersCount++;zeroFlag=false;firstNumberZero=true;}
+                if(text.equals("0")){textview.append(text);prevNum = true;
+                    isMs =false;
+                    isDot=false;numbersCount++;zeroFlag=false;firstNumberZero=true;}
                 else{textview.append(text);prevNum = true;isDot=false;numbersCount++;zeroFlag=true;}
             }
         }
@@ -150,6 +282,7 @@ public class MainActivity extends AppCompatActivity {
                 firstNumberZero = false;
                 isDot = false;
                 dotAfterEval = false;
+                isMs =false;
             }else {
                 Log.d("TAG", "clickedNum: ");
                 return;
@@ -157,12 +290,6 @@ public class MainActivity extends AppCompatActivity {
         }
         else{
             if(numbersCount<11){
-//                if (zeroFlag && text.equals("0")){textview.append(text);zeroFlag=false;operationTrigger = 0;prevNum = true;isDot=false;numbersCount++;}
-//
-//                else if (isZeroDot && text.equals("0")){
-//                    if(!textview.getText().toString().equals("0"))
-//                    textview.append(text);operationTrigger = 0;prevNum = true;isDot=false;numbersCount++;
-//                }
 
                  if(!text.equals("0"))
                  {
@@ -201,8 +328,7 @@ public class MainActivity extends AppCompatActivity {
     }else{return;}}
 
     public void dotFunction (View view){
-//        Button num = (Button) view;
-//        String text = num.getText().toString();
+
 
         String dispText = textview.getText().toString();
 
@@ -234,25 +360,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    // operation check
-//    public void opClicked(View view){
-//        Button num = (Button) view;
-//        String text = num.getText().toString();
-//        Log.d("TAG", "opClicked: "+text + textview.getText().toString());
-//
-//
-//        switch (text){
-//
-//            case "+": {if(!textview.getText().toString().isEmpty()) {setHintText(textview.getText().toString());textview.setText(""); return;}}
-//            case "-": {if(!textview.getText().toString().isEmpty()) {operationFlag = 2; number1 = Float.parseFloat(textview.getText().toString()) ;setHintText(textview.getText().toString());textview.setText("");return;}}
-//            case "/": {if(!textview.getText().toString().isEmpty()) {operationFlag = 3; number1 = Float.parseFloat(textview.getText().toString()) ;setHintText(textview.getText().toString());textview.setText("");return;}}
-//            case "*": {if(!textview.getText().toString().isEmpty()) {operationFlag = 4; number1 = Float.parseFloat(textview.getText().toString()) ;setHintText(textview.getText().toString());textview.setText("");return;}}
-//            case ".": {if(isDot) {return;} else{}}
-//            default: return;
-//
-//
-//        }
-//    }
 
 
 
@@ -285,6 +392,7 @@ public class MainActivity extends AppCompatActivity {
                 prevNum = true;
                 numbersCount = R.toString().length();
                 sign = true;
+                isMs = true;
 
             } else {
                 double scale = Math.pow(10, 3);
@@ -295,6 +403,7 @@ public class MainActivity extends AppCompatActivity {
                 setHintText(f.toString());
                 sign = true;
                 dotAfterEval = true;
+                isMs = true;
 
             }
             if (fResult == 0){firstNumberZero = true;}
@@ -303,7 +412,7 @@ public class MainActivity extends AppCompatActivity {
     }
     //set the hint text
     public void setHintText(String t){
-       TextView text = binding.fragmentContainerView.findViewById(R.id.textView3);
+       TextView text = binding.textView3;
        text.setText(t);
     }
 
@@ -322,6 +431,8 @@ public class MainActivity extends AppCompatActivity {
         operationTrigger=false;
         zeroFlag = true;
         dotAfterEval = false;
+        isMs =true;
+
     }
 
     public void delete (View view){
@@ -329,22 +440,37 @@ public class MainActivity extends AppCompatActivity {
         if(!textview.getText().toString().isEmpty()){
             String text = dispText.substring(0,dispText.length() - 1);
             textview.setText(text);
+            prevNum = true;
+            isOp = true;
+            isZeroDot = false;
+            sign = true;
+            isDot = false;
+            firstNumberZero = false;
+            numberAfDot = true;
+            numbersCount = numbersCount -1;
+            operationTrigger=false;
+            zeroFlag = true;
+            dotAfterEval = false;
+            isMs =true;
         }
-    }
-
-    public void ss(View v) {
-
-
-
-        Fragment Fragment2 = new ConverterFrag();
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(R.id.fragmentContainerView, Fragment2);
-        transaction.commit();
-
-
 
     }
+
+//    public void ss(View v) {
+//
+//
+//
+//        Fragment Fragment2 = new ConverterFrag();
+//        FragmentManager fm = getSupportFragmentManager();
+//        FragmentTransaction transaction = fm.beginTransaction();
+//        transaction.replace(R.id.fragmentContainerView, Fragment2);
+//        transaction.commit();
+//
+//
+//
+//    }
+
+
 }
 
 

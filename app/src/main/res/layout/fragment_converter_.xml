@@ -38,7 +38,7 @@
             android:elevation="5dp"
             tools:ignore="SpeakableTextPresentCheck" />
         <Button
-            android:id="@+id/btn_Converter2"
+            android:id="@+id/Convert"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
