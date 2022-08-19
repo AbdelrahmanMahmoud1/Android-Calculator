@@ -21,16 +21,15 @@ import javax.script.ScriptException;
 
 public class MainActivity extends AppCompatActivity {
     CalculatorFrag Fragment;
+    ConverterFrag  Fragment2;
     ActivityMainBinding binding;
     TextView textview;
     int flag;
-    boolean zeroFlag = true;
-    int operationFlag;
-    int operationTrigger;
-    int evalFlag;
+
     ScriptEngine engine;
 
-
+    boolean zeroFlag = true;
+    boolean operationTrigger = false;
     boolean sign = true;
     boolean isDot = false;
     boolean prevNum = false;
@@ -38,7 +37,9 @@ public class MainActivity extends AppCompatActivity {
     boolean isZeroDot = false;
     boolean firstNumberZero = false;
     boolean numberAfDot = true;
+    boolean states [];
     int numbersCount = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        Button btn_Converter = binding.btnConverter;
 
 
         engine = new ScriptEngineManager().getEngineByName("rhino");
@@ -58,36 +58,11 @@ public class MainActivity extends AppCompatActivity {
         transaction.replace(R.id.fragmentContainerView, Fragment);
         transaction.commit();
 
+        states= new boolean[15];
 
 
         flag = 0;
 
-//        btn_Converter.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (flag == 0){
-//                    flag = 1;
-//                    btn_Converter.setText("Calculator");
-//                    Fragment = new ConverterFrag();
-//                    FragmentManager fm = getSupportFragmentManager();
-//                    FragmentTransaction transaction = fm.beginTransaction();
-//                    transaction.replace(R.id.fragmentContainerView, Fragment);
-//                    transaction.commit();
-//
-//                }else{
-//                    flag = 0;
-//                    btn_Converter.setText("CONVERTER");
-//                    Fragment = new CalculatorFrag();
-//                    FragmentManager fm = getSupportFragmentManager();
-//                    FragmentTransaction transaction = fm.beginTransaction();
-//                    transaction.replace(R.id.fragmentContainerView, Fragment);
-//                    transaction.commit();
-//                }
-//
-//
-//
-//            }
-//        });
 
 
     }
@@ -97,9 +72,12 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         textview = (TextView) binding.fragmentContainerView.findViewById(R.id.textView2);
         binding.fragmentContainerView.findViewById(R.id.sign).setOnClickListener(v -> {
+            Log.d("TAG", "onStart: "+isZeroDot+operationTrigger+zeroFlag);
+            if(textview.getText().toString().charAt(textview.getText().length() - 1) == '.'){return;}
             if (sign){
                 textview.append("-");
                 sign = false;
+                zeroFlag = true;
             }else{
                 String dispText = textview.getText().toString();
 
@@ -108,7 +86,29 @@ public class MainActivity extends AppCompatActivity {
                 sign = true;
             }
         });
-    }
+        Button btn_Converter = binding.fragmentContainerView.findViewById(R.id.btn_Converter);
+
+
+            btn_Converter.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+                    btn_Converter.setText("Calculator");
+                    Fragment2 = new ConverterFrag();
+                    FragmentManager fm = getSupportFragmentManager();
+                    FragmentTransaction transaction = fm.beginTransaction();
+                    transaction.replace(R.id.fragmentContainerView, Fragment2);
+                    transaction.commit();
+
+
+
+                }
+            });
+        }
+
+
+
 
     //number clicked
     public void clickedNum(View view){
@@ -130,11 +130,11 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         else if (text.equals("*") || text.equals("-") || text.equals("+") || text.equals("/") || text.equals("%")){
-            if(operationTrigger == 0 && numberAfDot){
+            if(!operationTrigger && numberAfDot && sign){
                 textview.append(text);
                 isOp = true;
                 prevNum = false;
-                operationTrigger = 1;
+                operationTrigger = true;
                 numbersCount = 0;
                 zeroFlag = false;
                 isZeroDot = false;
@@ -156,17 +156,22 @@ public class MainActivity extends AppCompatActivity {
                  if(!text.equals("0"))
                  {
                      if (dispText.equals("0") && firstNumberZero){
-                         textview.setText(text);operationTrigger = 0;prevNum = true;isDot=false;numbersCount++;zeroFlag=true;firstNumberZero=false;sign = true;numberAfDot=true;}
+                         textview.setText(text);operationTrigger = false;prevNum = true;isDot=false;numbersCount++;zeroFlag=true;firstNumberZero=false;sign = true;numberAfDot=true;}
                      else if (firstNumberZero && !isZeroDot){
                          text = dispText.substring(0,dispText.length() - 1) + text;
-                         textview.setText(text);operationTrigger = 0;prevNum = true;isDot=false;numbersCount++;zeroFlag=true;firstNumberZero=false;sign = true;numberAfDot=true;
+                         textview.setText(text);operationTrigger = false;prevNum = true;isDot=false;numbersCount++;zeroFlag=true;firstNumberZero=false;sign = true;numberAfDot=true;
                      }
-                     else{textview.append(text);operationTrigger = 0;prevNum = true;isDot=false;numbersCount++;zeroFlag=true;firstNumberZero=false;sign = true;numberAfDot=true;}
+                     else{textview.append(text);operationTrigger = false;prevNum = true;isDot=false;numbersCount++;zeroFlag=true;firstNumberZero=false;sign = true;numberAfDot=true;}
                  }
                  else {
-                     if(operationTrigger == 1){textview.append(text);prevNum = true;firstNumberZero=true;operationTrigger=0;numbersCount++;sign = true;numberAfDot=true;}
-                     else if(isZeroDot){textview.append(text);prevNum = true;firstNumberZero=false;operationTrigger=0;numbersCount++;sign = true;numberAfDot=true;}
-                     else if (zeroFlag){textview.append(text);prevNum = true;firstNumberZero=false;operationTrigger=0;numbersCount++;sign = true;numberAfDot=true;}
+                     if(operationTrigger){textview.append(text);prevNum = true;firstNumberZero=true;operationTrigger=false;numbersCount++;sign = true;numberAfDot=true;}
+                     else if(isZeroDot){textview.append(text);prevNum = true;firstNumberZero=false;operationTrigger=false;numbersCount++;sign = true;numberAfDot=true;}
+                     else if (zeroFlag){
+                         if (!sign){textview.append(text);prevNum = true;zeroFlag=false;firstNumberZero=false;operationTrigger=false;numbersCount++;sign = true;numberAfDot=true;
+                         }
+                         else{
+                         textview.append(text);prevNum = true;firstNumberZero=false;operationTrigger=false;numbersCount++;sign = true;numberAfDot=true;
+                     }}
 
 
                  }
@@ -184,7 +189,14 @@ public class MainActivity extends AppCompatActivity {
         if(dispText.isEmpty()){return;}
 
         else if (prevNum && isOp){textview.append(".");prevNum=false;isOp = false;isDot=true;isZeroDot=true;numberAfDot=false;}
+        else if (sign){
+           String text = textview.getText().toString();
+           if(text.charAt(text.length() - 1) != '-'){
+               textview.append(".");prevNum=false;isOp = false;isDot=true;isZeroDot=true;numberAfDot=false;
+               sign = false;
+           }
 
+        }
         else{
             return;
         }
@@ -216,27 +228,39 @@ public class MainActivity extends AppCompatActivity {
 // evaluation function
     public void evaluateFunction(View view) throws ScriptException {
         String result = textview.getText().toString();
-        String value = engine.eval(result).toString();
+
         if (result.isEmpty()) {return;} else {
+           char x = result.charAt(result.length()-1);
+            if (x == '+' || x == '*' || x == '-' || x == '%' || x == '/' ){
+                Toast.makeText(this, "Invalid Format", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            String value = engine.eval(result).toString();
+            Log.d("TAG", "evaluateFunction: "+ value);
             if (value.equals("Infinity") || value.equals("NaN")){
                 Log.d("TAG", "evaluateFunction: "+engine.eval(result) + engine.eval(result));
                 Toast.makeText(this, "Invalid Format", Toast.LENGTH_SHORT).show();
                 textview.setText("");
+
+                clear(new View (getApplication()  ));
                 return;
             }
             Double fResult = (double) engine.eval(result);
             if (fResult % 1 == 0) {
                 Integer R = fResult.intValue();
                 textview.setText(R.toString());
+                setHintText(R.toString());
                 isOp = true;
                 prevNum = true;
                 numbersCount = R.toString().length();
                 sign = true;
             } else {
-                textview.setText(fResult.toString());
+                double scale = Math.pow(10, 3);
+                Double f = Math.round(fResult * scale) / scale;
+                textview.setText(f.toString());
                 isOp = false;
                 numbersCount = fResult.toString().length();
-
+                setHintText(f.toString());
                 sign = true;
 
             }
@@ -262,7 +286,8 @@ public class MainActivity extends AppCompatActivity {
         firstNumberZero = false;
         numberAfDot = true;
         numbersCount = 0;
-        operationTrigger=0;
+        operationTrigger=false;
+        zeroFlag = true;
     }
 
     public void delete (View view){
@@ -271,6 +296,20 @@ public class MainActivity extends AppCompatActivity {
             String text = dispText.substring(0,dispText.length() - 1);
             textview.setText(text);
         }
+    }
+
+    public void ss(View v) {
+
+
+
+        Fragment Fragment2 = new ConverterFrag();
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.replace(R.id.fragmentContainerView, Fragment2);
+        transaction.commit();
+
+
+
     }
 }
 

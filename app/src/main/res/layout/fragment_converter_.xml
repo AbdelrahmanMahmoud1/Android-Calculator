@@ -37,6 +37,20 @@
             android:gravity="center"
             android:elevation="5dp"
             tools:ignore="SpeakableTextPresentCheck" />
+        <Button
+            android:id="@+id/btn_Converter2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="3dp"
+            android:background="@drawable/converter"
+            android:elevation="5dp"
+            android:minHeight="48dp"
+            android:text="@string/converter"
+            android:textColor="#4527A0"
+            android:textSize="13sp"
+            tools:ignore="TextContrastCheck" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

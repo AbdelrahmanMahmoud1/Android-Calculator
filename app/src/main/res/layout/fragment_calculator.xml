@@ -60,6 +60,7 @@
                 android:text="@string/converter"
                 android:textColor="#4527A0"
                 android:textSize="13sp"
+                android:onClick="ss"
                 tools:ignore="TextContrastCheck" />
 
             <ImageView

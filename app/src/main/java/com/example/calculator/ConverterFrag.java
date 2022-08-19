@@ -3,21 +3,42 @@ package com.example.calculator;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.calculator.databinding.FragmentCalculatorBinding;
+import com.example.calculator.databinding.FragmentConverterBinding;
+
 
 public class ConverterFrag extends Fragment {
 
 
+    private FragmentConverterBinding binding;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view  = inflater.inflate(R.layout.fragment_converter_, container, false);
+        binding = FragmentConverterBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
+
+
+        binding.btnConverter2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment Fragment = new CalculatorFrag();
+                FragmentManager fm = getParentFragmentManager();
+                FragmentTransaction transaction = fm.beginTransaction();
+                transaction.replace(R.id.fragmentContainerView, Fragment);
+                transaction.commit();
+            }
+        });
+
+
         return view;
     }
 

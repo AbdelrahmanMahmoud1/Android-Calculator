@@ -3,6 +3,8 @@ package com.example.calculator;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,12 +29,11 @@ public class CalculatorFrag extends Fragment  {
         return view;
     }
 
-public void ab (View v){
-
-}
+    }
 
 
 
 
 
-}
+
+
